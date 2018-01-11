@@ -1,4 +1,4 @@
-import ads.sandbox
+import ads
 
 
 def authors(paper):
@@ -14,11 +14,16 @@ def authors(paper):
 
 
 def ciera_format(paper):
+    if paper.page is not None:
+        page = paper.page[0]
+    else:
+        page = None
     return unicode('''
     {}
     {}
     {}, {}, {}, {}
-    ''').format(paper.title[0], authors(paper), paper.year, paper.pub, paper.issue, paper.page[0]).replace("None, ", "")
+    ''').format(paper.title[0], authors(paper), paper.year, paper.pub, paper.issue, page)\
+        .replace("None, ", "").replace(", None", "")
 
 
 relevant_fields = ['aff', 'citation_count', 'title', 'author', 'year', 'issue', 'pub', 'page']
@@ -27,9 +32,14 @@ ciera_affiliations = ['*northwestern*', '*CIERA*',
 relevant_months = '2016-09-00 TO 2017-08-00'
 sort_type = 'citation_count+desc'
 
-q = ads.SearchQuery(aff=ciera_affiliations, fl=relevant_fields, pubdate=relevant_months, sort=sort_type)
+q = ads.SearchQuery(aff=ciera_affiliations, fl=relevant_fields, pubdate=relevant_months, sort=sort_type, rows=300)
 
 papers = [paper for paper in q]
 
-for paper in papers:
-    print ciera_format(paper)
+print len(papers)
+
+with open('ciera-papers.txt', 'w') as outfile:
+
+    for paper in papers:
+        print ciera_format(paper)
+        outfile.write(ciera_format(paper).encode('utf-8'))
