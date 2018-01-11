@@ -1,5 +1,3 @@
-# -*- coding: UTF-8 -*-
-
 import ads.sandbox
 
 
@@ -20,10 +18,10 @@ def ciera_format(paper):
     {}
     {}
     {}, {}, {}, {}
-    ''').format(paper.title[0], authors(paper), paper.year, paper.pub, paper.issue, paper.page[0])
+    ''').format(paper.title[0], authors(paper), paper.year, paper.pub, paper.issue, paper.page[0]).replace("None, ", "")
 
 
-relevant_fields = ['aff', 'citation_count', 'title', 'author', 'year', 'issue']
+relevant_fields = ['aff', 'citation_count', 'title', 'author', 'year', 'issue', 'pub', 'page']
 ciera_affiliations = ['*northwestern*', '*CIERA*',
                       '*Center for Interdisciplinary Exploration and Research in Astrophysics*']
 relevant_months = '2016-09-00 TO 2017-08-00'
