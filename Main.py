@@ -1,7 +1,21 @@
+"""
+This file, when run, pulls papers from ADS that are affiliated with Northwestern or CIERA, and then outputs them in a
+usable format intended for the annual report, sorted by citation count. It is important that this list then be filtered
+manually to select the most meaningful papers to include, weighing such factors as CIERA's contributions to the effort
+and the importance of a work in the field.
+"""
+
 import ads
 
 
+
 def authors(paper):
+    """
+    Formats the author list in CIERA's specified format.
+
+    :param paper: a paper object to return the printable author list of
+    :return: the formatted list of authors for the paper
+    """
     authors = paper.author
     if len(authors) == 1:
         return unicode('{}').format(authors[0])
@@ -14,15 +28,21 @@ def authors(paper):
 
 
 def ciera_format(paper):
+    """
+    Format the paper in CIERA's preferred format for the annual report.
+
+    :param paper: a paper object to return a printable version of
+    :return: the printable version of that paper
+    """
     if paper.page is not None:
         page = paper.page[0]
     else:
         page = None
     return unicode('''
-    {}
-    {}
-    {}, {}, {}, {}
-    ''').format(paper.title[0], authors(paper), paper.year, paper.pub, paper.issue, page)\
+{}
+{}
+{}, {}, {}, {}
+''').format(paper.title[0], authors(paper), paper.year, paper.pub, paper.issue, page) \
         .replace("None, ", "").replace(", None", "")
 
 
@@ -39,7 +59,6 @@ papers = [paper for paper in q]
 print len(papers)
 
 with open('ciera-papers.txt', 'w') as outfile:
-
     for paper in papers:
         print ciera_format(paper)
         outfile.write(ciera_format(paper).encode('utf-8'))
